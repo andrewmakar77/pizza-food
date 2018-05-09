@@ -38,8 +38,8 @@ export const router = new VueRouter({
       ]
   },
     {path:'/admin',component:Admin},
-    {path:'*', component:Not}
-    // {path:'*', redirect:'/'}
+    // {path:'*', component:Not}
+    {path:'*', redirect:'/'}
   ]
 })
 

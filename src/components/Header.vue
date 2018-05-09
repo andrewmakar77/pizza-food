@@ -1,6 +1,6 @@
 <template>
   <header class="row">
-      <nav class="navbar navbar-expand-md navbar-light">
+      <nav class="navbar navbar-expand-md navbar-light bg-light container mt-3 font-weight-bold text-capitalize">
           <a href="/" class="navbar-brand">PIZZA FOOD</a>
           <ul class="navbar-nav">
                   <router-link to="/" tag="li"><a class="nav-link">home</a></router-link>

@@ -1,5 +1,6 @@
 <template>
 <div>
+<section v-if="currentUser" >
   <div class="row">
       <div class="col-sm-12 col-md-6">
         <app-pizza></app-pizza>
@@ -13,13 +14,14 @@
                       <th>Remove from menu</th>
                   </tr>
               </thead>
-              <tbody v-for="(pizza,index) in getPizza" :key="index">
+              <tbody v-for="pizza in getPizza" :key="pizza['.key']">
                   <tr>
                       <td>
                           {{pizza.name}}
                       </td>
                       <td>
-                          <button class="btn btn-sm btn-outline-danger">x</button>
+                          <button class="btn btn-sm btn-outline-danger"
+                          @click="removeMenuItem(pizza['.key'])">x</button>
                       </td>
                   </tr>
               </tbody>
@@ -29,9 +31,9 @@
 
   <div class="row">
       <div class="col-sm-12">
-          <h3>Current orders:</h3>
-          <table class="table table-sm">
-              <thead>
+          <h3>Current orders:{{numOfOrders}}</h3>
+          <table class="table table-sm" v-for="(orders,index) in getOrders" :key="orders['.key']" >
+              <thead class="bg-light">
                   <tr>
                       <th>Item</th>
                       <th>Size</th>
@@ -42,20 +44,23 @@
 
               <tbody>
                 <div class="order-number p-2">
-                    <strong><em>Order Number:{{numOfOrders}}</em></strong>
-                    <button class="btn btn-sm btn-outline-danger">x</button>
+                    <strong><em>Order Number:{{index +1}}</em></strong>
+                    <button class="btn btn-sm btn-outline-danger"
+                    @click="removeOrdersItem(orders['.key'])">x</button>
                 </div>
-                <tr>
-                    <td>Margerita</td>
-                    <td>9</td>
-                    <td>1</td>
-                    <td>6.99</td>
+                <tr v-for="(orderItems,index) in orders['.value']" :key="index" >
+                    <td>{{orderItems.name}}</td>
+                    <td>{{orderItems.size}}"</td>
+                    <td>{{orderItems.quantity}}</td>
+                    <td>{{orderItems.price | currency}}</td>
                 </tr>
               </tbody>
           </table>
       </div>
   </div> 
+</section>
   <hr>
+ 
     <div class="row">
        <div class="col-sm-12 col-md-6">
             <app-login></app-login>
@@ -69,6 +74,7 @@
 import NewPizza from './NewPizza'
 import Login from './Login'
 import { mapGetters} from 'vuex'
+import { dbMenuRef, dbOrdersRef } from '../firebaseConfig'
 
 export default {
   components:{
@@ -78,8 +84,18 @@ export default {
     computed:{
       ...mapGetters([
           'numOfOrders',
-          'getPizza'
+          'getPizza',
+          'getOrders',
+          'currentUser'
       ])
   },
+  methods:{
+      removeMenuItem(key){
+          dbMenuRef.child(key).remove()
+      },
+     removeOrdersItem(key){
+          dbOrdersRef.child(key).remove()
+      }
+  }
 }
 </script>

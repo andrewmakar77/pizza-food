@@ -10,13 +10,13 @@
                     <th>Add to basket</th>
                 </tr>
               </thead>
-              <tbody v-for="(item,index) in getPizza" :key="index">
+              <tbody v-for="item in getPizza" :key="item['.key']">
                   <tr>
                       <td><strong>{{item.name}}</strong></td>
                   </tr>
                   <tr v-for="(option,index) in item.options" :key="index">
                       <td>{{option.size}}"</td>
-                      <td>{{option.price}}</td>
+                      <td>{{option.price | currency}}</td>
                       <td><button class="btn btn-sm btn-outline-success"
                             @click="addToBasket(item,option)">+</button></td>
                   </tr>
@@ -43,18 +43,17 @@
                             <button class="btn btn-dark btn-sm"
                                     @click="increase(pizza)">+</button>
                         </td>
-                        <td>{{pizza.name}} {{pizza.size}}</td>
-                        <td>{{pizza.price * pizza.quantity}}</td>
+                        <td>{{pizza.name}} {{pizza.size}}"</td>
+                        <td>{{pizza.price  * pizza.quantity | currency}}</td>
                     </tr>
                 </tbody>
             </table>
-            <p>Order total $:</p>
+            <p>Order total : {{total | currency}}</p>
             <button class="btn btn-success w-100"
                     @click="addNewOrder">Place Order</button>
         </div>
         <div v-else>
             <strong>{{basketText}}</strong>
-            <p>{{this.$store.state.orders}}</p>
         </div>
     </div>
 </div>
@@ -63,6 +62,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import {dbOrdersRef} from '../firebaseConfig'
 
 export default {
   data(){
@@ -74,7 +74,15 @@ export default {
   computed:{
       ...mapGetters([
           'getPizza'
-      ])
+      ]),
+      total(){
+          let totalCost=0
+          for(let items in this.basket){
+              let individualItem = this.basket[items];
+              totalCost+=individualItem.quantity * individualItem.price;
+          }
+          return totalCost;
+      }
   },
   methods:{
       addToBasket(item,option){
@@ -95,7 +103,8 @@ export default {
           pizza.quantity++;
       },
       addNewOrder(){
-          this.$store.commit("addOrder", this.basket);
+        //   this.$store.commit("addOrder", this.basket);
+        dbOrdersRef.push(this.basket)
           this.basket=[];
           this.basketText="Thanks for order"
       }

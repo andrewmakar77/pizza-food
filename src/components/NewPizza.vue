@@ -77,7 +77,7 @@ export default {
   },
   methods:{
       addToMenuItem(){
-          dbMenuef.push(this.newPizza);
+          dbMenuRef.push(this.newPizza);
       }
   }
 }

@@ -1,10 +1,8 @@
 <template>
   <div class="row">
-
-
-
       <form>
-          <p>Logged in as: <br>
+          <p v-if="!currentUser">Please login</p>
+          <p v-else>Logged in as: <br>
          <strong> {{currentUser}}</strong>
           </p>
           <div class="form-group">
@@ -56,9 +54,11 @@ export default {
         else{
             alert(errorMessage);
         }
-        
-});
-      },
+    });
+
+        document.querySelector("#email").value="";
+        document.querySelector("#password").value="";
+},
       signOut(){
         firebase.auth().signOut().then(function() {
             alert("Log out")
