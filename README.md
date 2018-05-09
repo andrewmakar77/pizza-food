@@ -1,6 +1,7 @@
 # pizza-planet
 
 > A Vue.js project
+> Login:andrew@gmail.com, password:0748vs for admin section
 
 ## Build Setup
 
